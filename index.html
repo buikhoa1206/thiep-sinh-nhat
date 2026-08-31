@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiệp Mời Sinh Nhật Hoàng Gia 3D</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-rosegold min-h-screen relative selection:bg-rose-500 selection:text-white">
+
+  <!-- BACKGROUND PARTICLES -->
+  <div id="floating-bg" class="floating-bg"></div>
+
+  <!-- ADMIN QUICK BADGE & TOGGLE -->
+  <div id="admin-badge" class="fixed top-5 left-5 z-50 hidden">
+    <button onclick="toggleAdminMode()" class="bg-gray-900/90 text-white px-4 py-2 rounded-full text-xs font-semibold backdrop-blur-md border border-white/20 shadow-xl hover:bg-gray-800 transition-all flex items-center gap-2">
+      <span id="admin-toggle-text">👁️ Xem Giao Diện Khách Mời</span>
+    </button>
+  </div>
+
+  <!-- 1. MÀN HÌNH BÌA PHONG BÌ THIỆP MỜI HOÀNG GIA 3D (3D ROYAL INVITATION ENVELOPE COVER) -->
+  <div id="envelope-screen" onclick="openInvitation()" class="fixed inset-0 z-40 flex flex-col items-center justify-center p-4 transition-all duration-700 bg-gradient-to-br from-rose-950 via-rose-900 to-rose-950 cursor-pointer">
+    
+    <!-- Title Header -->
+    <div class="text-center mb-6 sm:mb-8 space-y-2 z-10 animate-fade-in">
+      <span class="inline-block bg-amber-400/20 text-amber-300 border border-amber-400/40 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-inner">
+        👑 ROYAL VIP INVITATION
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-calligraphy text-amber-200 drop-shadow-lg tracking-wide">
+        Trân Trọng Mời Bạn
+      </h1>
+      <p class="text-xs sm:text-sm text-rose-200/90 font-medium">Chạm vào con dấu sáp hoặc phong bì để mở thiệp sinh nhật ✉️✨</p>
+    </div>
+
+    <!-- Phong Bì Thiệp Mời Hoàng Gia 3D (3D Royal Invitation Envelope) -->
+    <div class="envelope-wrapper z-10 cursor-pointer" onclick="openInvitation()">
+      <div id="envelope-3d" class="envelope-3d cursor-pointer">
+        
+        <!-- Nắp Phong Bì 3D (Flap) -->
+        <div id="envelope-flap" class="envelope-flap cursor-pointer">
+          <!-- Huy Hiệu Con Dấu Sáp Hoàng Gia 3D (Royal Wax Seal) -->
+          <div id="royal-bow" class="royal-bow cursor-pointer" onclick="openInvitation()">
+            <span id="wax-seal-icon" class="text-xl sm:text-2xl">👑</span>
+            <span id="wax-seal-text" class="text-[10px] sm:text-xs font-extrabold tracking-widest text-amber-100 uppercase mt-0.5">ANH KHOA</span>
+            <span id="wax-seal-subtext" class="text-[8px] text-amber-200/80 uppercase tracking-tighter">MỞ THIỆP ✨</span>
+          </div>
+        </div>
+
+        <!-- Tấm Thiệp Nổi Bên Trong Phong Bì (Card Inside Envelope) -->
+        <div id="card-inside" class="card-inside">
+          <div class="gift-box-text-container space-y-1">
+            <p class="text-[10px] sm:text-xs uppercase tracking-widest text-amber-200/90 font-semibold">TRÂN TRỌNG KÍNH MỜI</p>
+            <h2 id="config-name" class="text-2xl sm:text-3xl font-extrabold font-cinzel gold-text-emboss tracking-wider">ANH KHOA</h2>
+            <p class="text-[11px] sm:text-xs text-amber-100/90 font-medium">Mừng Sinh Nhật Tuổi <span id="config-age" class="font-bold">20</span></p>
+          </div>
+        </div>
+
+        <!-- Thân Phong Bì 3D (Envelope Pocket Body) -->
+        <div class="envelope-pocket"></div>
+
+      </div>
+    </div>
+
+    <p class="text-[11px] text-rose-300/70 mt-6 z-10 font-light italic animate-pulse">✨ Nhấp vào Con Dấu Sáp hoặc Phong Bì để bắt đầu ✨</p>
+  </div>
+
+  <!-- 2. TRANG NỘI DUNG THIỆP MỜI CHÍNH -->
+  <main id="main-content" class="relative z-10 hidden max-w-4xl mx-auto px-4 py-8 sm:py-16 space-y-12 sm:space-y-20">
+    
+    <!-- HEADER INTRO HERO CARD -->
+    <section class="glass-card-luxury rounded-3xl p-6 sm:p-12 text-center relative overflow-hidden space-y-6">
+      
+      <!-- Host Avatar & Info -->
+      <div class="relative w-36 h-36 sm:w-44 sm:h-44 mx-auto group cursor-pointer" onclick="openAvatarModal()">
+        <img id="config-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Avatar Minh Anh" class="w-full h-full object-cover rounded-full border-4 border-white shadow-2xl transition-transform duration-500 group-hover:scale-105">
+        <div class="admin-only hidden absolute inset-0 bg-black/40 rounded-full flex items-center justify-center text-white text-xs font-bold transition-opacity">
+          📸 Đổi Avatar
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <span id="config-title" class="inline-block bg-rose-500/10 text-rose-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border border-rose-200">
+          ✨ THIỆP MỜI SINH NHẬT SPECIAL ✨
+        </span>
+        
+        <h1 class="text-4xl sm:text-6xl font-calligraphy text-gray-900 leading-tight">
+          <span id="config-nickname">Nguyễn Minh Anh</span>
+        </h1>
+        
+        <p id="config-subtitle" class="text-sm sm:text-base text-gray-600 max-w-lg mx-auto font-light leading-relaxed">
+          Trân trọng kính mời bạn đến tham dự bữa tiệc mừng tuổi 20 ấm áp, ngọt ngào và đáng nhớ cùng mình!
+        </p>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <a href="#rsvp-section" class="px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-xs sm:text-sm rounded-full shadow-lg hover:from-rose-600 hover:to-pink-600 transition-all flex items-center gap-2">
+          <span>💌 Xác Nhận Tham Dự</span>
+        </a>
+        <a href="#wish-section" class="px-6 py-3 bg-white text-rose-600 border border-rose-200 font-bold text-xs sm:text-sm rounded-full shadow-md hover:bg-rose-50 transition-all flex items-center gap-2">
+          <span>✍️ Gửi Lời Chúc</span>
+        </a>
+      </div>
+
+    </section>
+
+    <!-- COUNTDOWN TIMER BANNER -->
+    <section id="section-countdown" class="glass-card-luxury rounded-3xl p-6 sm:p-8 text-center space-y-4">
+      <h3 class="text-xs sm:text-sm font-bold uppercase tracking-widest text-rose-500 flex items-center justify-center gap-2">
+        <i class="fas fa-hourglass-half"></i> Đếm Ngược Đến Đêm Tiệc
+      </h3>
+
+      <div id="countdown-container" class="grid grid-cols-4 gap-2 sm:gap-4 max-w-md mx-auto">
+        <div class="bg-white/80 p-3 sm:p-4 rounded-2xl shadow-sm border border-rose-100">
+          <span id="cd-days" class="block text-2xl sm:text-4xl font-extrabold text-rose-600 font-cinzel">00</span>
+          <span class="text-[10px] sm:text-xs text-gray-500 uppercase font-medium">Ngày</span>
+        </div>
+        <div class="bg-white/80 p-3 sm:p-4 rounded-2xl shadow-sm border border-rose-100">
+          <span id="cd-hours" class="block text-2xl sm:text-4xl font-extrabold text-rose-600 font-cinzel">00</span>
+          <span class="text-[10px] sm:text-xs text-gray-500 uppercase font-medium">Giờ</span>
+        </div>
+        <div class="bg-white/80 p-3 sm:p-4 rounded-2xl shadow-sm border border-rose-100">
+          <span id="cd-minutes" class="block text-2xl sm:text-4xl font-extrabold text-rose-600 font-cinzel">00</span>
+          <span class="text-[10px] sm:text-xs text-gray-500 uppercase font-medium">Phút</span>
+        </div>
+        <div class="bg-white/80 p-3 sm:p-4 rounded-2xl shadow-sm border border-rose-100">
+          <span id="cd-seconds" class="block text-2xl sm:text-4xl font-extrabold text-rose-600 font-cinzel">00</span>
+          <span class="text-[10px] sm:text-xs text-gray-500 uppercase font-medium">Giây</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE BIRTHDAY CAKE & CANDLES -->
+    <section id="section-cake" class="glass-card-luxury rounded-3xl p-6 sm:p-10 text-center space-y-6 relative overflow-hidden">
+      <div class="space-y-2">
+        <span class="text-xs font-bold text-rose-500 uppercase tracking-widest">Tương Tác Đặc Biệt</span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-cinzel text-gray-900">Bánh Sinh Nhật & Nến Ước Nguyện</h2>
+      </div>
+
+      <div class="relative flex flex-col items-center py-4">
+        <!-- 3 Nến -->
+        <div class="flex items-end justify-center gap-4 mb-1 z-10">
+          <div class="w-2.5 h-12 bg-amber-200 rounded-t-full relative flex flex-col items-center">
+            <div id="candle-flame-1" class="candle-flame absolute -top-5"></div>
+          </div>
+          <div class="w-3 h-14 bg-rose-300 rounded-t-full relative flex flex-col items-center">
+            <div id="candle-flame-2" class="candle-flame absolute -top-5"></div>
+          </div>
+          <div class="w-2.5 h-12 bg-pink-200 rounded-t-full relative flex flex-col items-center">
+            <div id="candle-flame-3" class="candle-flame absolute -top-5"></div>
+          </div>
+        </div>
+
+        <!-- Bánh 3 Tầng -->
+        <div class="w-40 sm:w-48 h-10 bg-gradient-to-r from-pink-300 to-rose-300 rounded-t-2xl shadow-inner flex items-center justify-center text-white text-xs font-bold border-t-2 border-white/60">
+          <span id="cake-tier-1">Tuổi 20</span>
+        </div>
+        <div class="w-52 sm:w-60 h-12 bg-gradient-to-r from-rose-400 to-pink-400 rounded-t-2xl shadow-inner flex items-center justify-center text-white text-xs sm:text-sm font-bold border-t-2 border-white/60">
+          <span id="cake-tier-2">✨ Happy Birthday ✨</span>
+        </div>
+        <div class="w-64 sm:w-72 h-14 bg-gradient-to-r from-rose-500 to-pink-500 rounded-2xl shadow-lg flex items-center justify-center text-white text-sm sm:text-base font-bold border-t-2 border-white/60">
+          <span id="cake-tier-3">🍓 Minh Anh 🎂</span>
+        </div>
+      </div>
+
+      <button onclick="blowCandles()" class="px-8 py-3.5 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold rounded-full shadow-lg hover:shadow-rose-500/40 transition-all transform hover:scale-105 flex items-center gap-2 mx-auto text-sm cursor-pointer">
+        <span id="candle-btn-text">Thổi Nến Ước Nguyện 🎂</span>
+      </button>
+    </section>
+
+    <!-- EVENT DETAILS & MAP LOCATION -->
+    <section id="section-event" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Thời gian -->
+      <div class="glass-card-luxury rounded-3xl p-6 sm:p-8 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center text-xl font-bold">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h3 class="text-lg font-bold font-cinzel text-gray-900">Thời Gian Tổ Chức</h3>
+        <div class="space-y-1 text-sm text-gray-600">
+          <p id="config-dateText" class="font-bold text-gray-800 text-base">Thứ Ba, Ngày 15 tháng 09 năm 2026</p>
+          <p id="config-timeText">Đón khách: 17:30 - Khai mạc tiệc: 18:30</p>
+        </div>
+      </div>
+
+      <!-- Địa điểm -->
+      <div class="glass-card-luxury rounded-3xl p-6 sm:p-8 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center text-xl font-bold">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h3 class="text-lg font-bold font-cinzel text-gray-900">Địa Điểm Đêm Tiệc</h3>
+        <div class="space-y-1 text-sm text-gray-600">
+          <p id="config-locationName" class="font-bold text-gray-800 text-base">GEM Center - Ball Room</p>
+          <p id="config-locationAddress">Số 8 Nguyễn Bỉnh Khiêm, Phường Đa Kao, Quận 1, TP. Hồ Chí Minh</p>
+        </div>
+        <div class="pt-2 flex items-center gap-2">
+          <a id="config-mapUrl" href="#" target="_blank" class="text-xs font-bold text-rose-600 hover:underline flex items-center gap-1">
+            <span>📍 Xem bản đồ Google Maps</span> <i class="fas fa-arrow-right"></i>
+          </a>
+          <button onclick="copyAddress()" class="text-xs text-gray-500 hover:text-gray-700 bg-gray-100 px-3 py-1 rounded-full cursor-pointer">
+            📋 Sao chép địa chỉ
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TIMELINE & DRESSCODE -->
+    <section id="section-timeline-dresscode" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Timeline Lịch trình -->
+      <div id="section-timeline" class="md:col-span-2 glass-card-luxury rounded-3xl p-6 sm:p-8 space-y-6">
+        <h3 class="text-xl font-bold font-cinzel text-gray-900 flex items-center gap-2">
+          <i class="fas fa-clock text-rose-500"></i> Lịch Trình Tiệc
+        </h3>
+        <div id="timeline-container" class="space-y-4">
+          <!-- JS Renders Timeline -->
+        </div>
+      </div>
+
+      <!-- Dresscode -->
+      <div id="section-dresscode" class="glass-card-luxury rounded-3xl p-6 sm:p-8 space-y-6 flex flex-col justify-between">
+        <div class="space-y-4">
+          <h3 class="text-xl font-bold font-cinzel text-gray-900 flex items-center gap-2">
+            <i class="fas fa-tshirt text-rose-500"></i> Trang Phục
+          </h3>
+          <p id="config-dressCodeText" class="text-sm text-gray-600 leading-relaxed">
+            Ưu tiên trang phục dạ tiệc với tông màu nhẹ nhàng, thanh lịch.
+          </p>
+          <div id="dresscode-colors" class="flex flex-wrap gap-2 pt-2">
+            <!-- JS Renders Dresscode Colors -->
+          </div>
+        </div>
+
+        <div class="p-4 bg-rose-500/10 rounded-2xl border border-rose-200 text-xs text-rose-700 font-medium">
+          💡 Rất mong bạn chuẩn bị trang phục hợp tông màu để chúng mình có những bức hình kỷ niệm thật đẹp nhé!
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PHOTO GALLERY & UPLOAD SECTION -->
+    <section id="section-gallery" class="glass-card-luxury rounded-3xl p-6 sm:p-10 space-y-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold text-rose-500 uppercase tracking-widest">Album Kỷ Niệm</span>
+          <h2 class="text-2xl sm:text-3xl font-bold font-cinzel text-gray-900">Khoảnh Khắc Đáng Nhớ</h2>
+        </div>
+        <button onclick="openAddPhotoModal()" class="admin-only hidden px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-full shadow-md transition-all text-xs flex items-center gap-2 cursor-pointer">
+          <span>📷 Thêm Ảnh Mới</span>
+        </button>
+      </div>
+
+      <div id="gallery-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- JS Renders Gallery Photos -->
+      </div>
+    </section>
+
+    <!-- GIFT / QR CODE BANK SECTION -->
+    <section id="section-qr" class="glass-card-luxury rounded-3xl p-6 sm:p-10 text-center space-y-6">
+      <div class="space-y-2">
+        <span class="text-xs font-bold text-rose-500 uppercase tracking-widest">Hộp Thư Mừng Tuổi</span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-cinzel text-gray-900">Mừng Tuổi Mới</h2>
+        <p class="text-xs sm:text-sm text-gray-500 max-w-md mx-auto">
+          Sự hiện diện của bạn là món quà ý nghĩa nhất. Nếu muốn gửi quà mừng tuổi mới, bạn có thể quét mã QR dưới đây nhé!
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl shadow-lg border border-rose-100 max-w-xs mx-auto space-y-4">
+        <img id="bank-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=NguyenMinhAnh_Birthday2026" alt="Mã QR VietQR" class="w-48 h-48 mx-auto rounded-2xl border border-gray-100 object-contain">
+        
+        <div class="space-y-1 text-xs sm:text-sm">
+          <p id="bank-name" class="font-bold text-rose-600 uppercase">MB BANK</p>
+          <p id="bank-acc-num" class="font-mono font-bold text-gray-900 text-base">999988882026</p>
+          <p id="bank-acc-name" class="text-gray-500 uppercase font-medium">NGUYEN MINH ANH</p>
+        </div>
+
+        <button onclick="copyAccountNum()" class="px-4 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold rounded-full text-xs transition-all w-full flex items-center justify-center gap-1.5 cursor-pointer">
+          <span>📋 Sao chép số tài khoản</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- RSVP FORM SECTION -->
+    <section id="rsvp-section" class="glass-card-luxury rounded-3xl p-6 sm:p-10 space-y-6">
+      <div class="text-center space-y-2">
+        <span id="rsvp-tagline" class="text-xs font-bold text-rose-500 uppercase tracking-widest">Xác Nhận Tham Dự</span>
+        <h2 id="rsvp-title" class="text-2xl sm:text-3xl font-bold font-cinzel text-gray-900">Gửi Phản Hồi Cho Minh Anh</h2>
+      </div>
+
+      <form id="rsvp-form" class="max-w-xl mx-auto space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Họ & Tên Của Bạn *</label>
+          <input type="text" id="rsvp-name" required placeholder="Nhập tên của bạn..." class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Số Điện Thoại</label>
+            <input type="tel" id="rsvp-phone" placeholder="0901234567..." class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Trạng Thái Tham Dự</label>
+            <select id="rsvp-status" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm font-medium">
+              <option value="Chắc chắn tham dự 🎉">Chắc chắn tham dự 🎉</option>
+              <option value="Tiếc quá, mình bận rồi 🥺">Tiếc quá, mình bận rồi 🥺</option>
+              <option value="Sẽ xác nhận sau ⏳">Sẽ xác nhận sau ⏳</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Đi Cùng Mấy Người?</label>
+            <select id="rsvp-guests" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+              <option value="1 người (Đi 1 mình)">1 người (Đi 1 mình)</option>
+              <option value="2 người (Đi cùng bạn)">2 người (Đi cùng bạn)</option>
+              <option value="3+ người">3+ người</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Ghi Chú</label>
+            <input type="text" id="rsvp-note" placeholder="Dị ứng thức ăn, lời nhắn..." class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-rose-500/40 transition-all text-sm cursor-pointer">
+          <span id="rsvp-btn-text">💌 Gửi Xác Nhận Tham Dự</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- WISHBOOK / GUESTBOOK SECTION -->
+    <section id="wish-section" class="glass-card-luxury rounded-3xl p-6 sm:p-10 space-y-8">
+      <div class="text-center space-y-2">
+        <span id="wish-tagline" class="text-xs font-bold text-rose-500 uppercase tracking-widest">Sổ Lưu Bút</span>
+        <h2 id="wish-title" class="text-2xl sm:text-3xl font-bold font-cinzel text-gray-900">Gửi Lời Chúc Mừng Sinh Nhật</h2>
+      </div>
+
+      <!-- Form Gửi Lời Chúc -->
+      <form id="wish-form" class="max-w-xl mx-auto space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <input type="text" id="wish-name" required placeholder="Tên của bạn..." class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+          </div>
+          <button type="submit" class="py-3 bg-rose-500 text-white font-bold rounded-2xl shadow-md hover:bg-rose-600 transition-all text-sm cursor-pointer">
+            <span id="wish-btn-text">💖 Gửi Lời Chúc</span>
+          </button>
+        </div>
+        <div>
+          <textarea id="wish-message" required rows="3" placeholder="Viết lời chúc ngọt ngào gửi tới Minh Anh..." class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm resize-none"></textarea>
+        </div>
+      </form>
+
+      <!-- Danh Sách Lời Chúc -->
+      <div id="wishes-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2">
+        <!-- JS Renders Wishes -->
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center space-y-2 py-6 text-xs text-gray-500">
+      <p class="font-calligraphy text-2xl text-rose-600">Thank You For Being Part Of My Special Day!</p>
+      <p>© 2026 Birthday Invitation. Built with Love & Magic ✨</p>
+    </footer>
+
+  </main>
+
+  <!-- AVATAR MODAL -->
+  <div id="avatar-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-4 shadow-2xl relative">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold font-cinzel text-gray-900">📸 Đổi Ảnh Đại Diện</h3>
+        <button onclick="closeAvatarModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center text-sm cursor-pointer">✕</button>
+      </div>
+      <form id="avatar-form" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Chọn File Ảnh Từ Máy:</label>
+          <input type="file" id="avatar-file-input" accept="image/*" class="w-full p-2 bg-gray-50 rounded-xl border border-gray-200">
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Hoặc Dán Link URL Ảnh:</label>
+          <input type="text" id="avatar-url-input" placeholder="https://example.com/photo.jpg" class="w-full px-3 py-2 rounded-xl border border-gray-200">
+        </div>
+        <button type="submit" class="w-full py-2.5 bg-rose-500 text-white font-bold rounded-xl shadow-md hover:bg-rose-600 cursor-pointer">Cập Nhật Avatar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD PHOTO MODAL -->
+  <div id="add-photo-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-4 shadow-2xl relative">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold font-cinzel text-gray-900">📷 Thêm Ảnh Kỷ Niệm Mới</h3>
+        <button onclick="closeAddPhotoModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center text-sm cursor-pointer">✕</button>
+      </div>
+      <form id="add-photo-form" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Chọn File Ảnh Từ Máy:</label>
+          <input type="file" id="photo-file" accept="image/*" class="w-full p-2 bg-gray-50 rounded-xl border border-gray-200">
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Hoặc Link URL Ảnh:</label>
+          <input type="text" id="photo-url" placeholder="https://example.com/photo.jpg" class="w-full px-3 py-2 rounded-xl border border-gray-200">
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Chú Thích Bức Ảnh:</label>
+          <input type="text" id="photo-caption" placeholder="Kỷ niệm tuổi 20..." class="w-full px-3 py-2 rounded-xl border border-gray-200">
+        </div>
+        <button type="submit" class="w-full py-2.5 bg-rose-500 text-white font-bold rounded-xl shadow-md hover:bg-rose-600 cursor-pointer">Thêm Vào Album</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

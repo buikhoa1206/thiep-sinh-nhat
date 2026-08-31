@@ -1,0 +1,12 @@
+{
+  "name": "thiep-sinh-nhat-hoang-gia",
+  "version": "1.0.0",
+  "description": "Thiệp Mời Sinh Nhật Hoàng Gia 3D Online",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
