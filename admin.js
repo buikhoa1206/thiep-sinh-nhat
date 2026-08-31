@@ -102,19 +102,22 @@ function loadAdminForm() {
   const songBadge = document.getElementById("admin-current-song-badge");
   if (songBadge) songBadge.textContent = `Bài hát đang chọn: ${currentSongName}`;
 
-  // Primary Color Picker, Cover BG Picker & Box Color Picker
+  // Primary Color Picker, Cover BG Picker, Box Color Picker & Wax Seal Color Picker
   const savedColor = localStorage.getItem("birthday_custom_primary_color") || "#f43f5e";
   const savedCoverBg = localStorage.getItem("birthday_custom_cover_bg") || "#4c0519";
   const savedBoxColor = localStorage.getItem("birthday_custom_box_color") || "#9f1239";
+  const savedWaxColor = localStorage.getItem("birthday_custom_wax_color") || "#d97706";
 
   setValue("admin-primary-color-picker", savedColor);
   setValue("admin-cover-bg-picker", savedCoverBg);
   setValue("admin-box-color-picker", savedBoxColor);
+  setValue("admin-wax-color-picker", savedWaxColor);
 
   setValue("admin-hex-color-input", savedColor.toUpperCase());
   setValue("admin-primary-hex-input", savedColor.toUpperCase());
   setValue("admin-cover-hex-input", savedCoverBg.toUpperCase());
   setValue("admin-box-hex-input", savedBoxColor.toUpperCase());
+  setValue("admin-wax-hex-input", savedWaxColor.toUpperCase());
 
   adminPreviewHexColor(savedColor);
   updateLiveColorBadge(savedColor);
@@ -183,6 +186,16 @@ function adminUpdateBoxHex(val) {
   if (isValidHex(hex)) {
     localStorage.setItem("birthday_custom_box_color", hex);
     setValue("admin-box-color-picker", hex);
+  }
+}
+
+function adminUpdateWaxHex(val) {
+  let hex = val.trim();
+  if (hex && !hex.startsWith("#")) hex = "#" + hex;
+
+  if (isValidHex(hex)) {
+    localStorage.setItem("birthday_custom_wax_color", hex);
+    setValue("admin-wax-color-picker", hex);
   }
 }
 
@@ -351,6 +364,15 @@ function initColorPickerListener() {
       const hex = e.target.value;
       localStorage.setItem("birthday_custom_box_color", hex);
       setValue("admin-box-hex-input", hex.toUpperCase());
+    });
+  }
+
+  const waxPicker = document.getElementById("admin-wax-color-picker");
+  if (waxPicker) {
+    waxPicker.addEventListener("input", (e) => {
+      const hex = e.target.value;
+      localStorage.setItem("birthday_custom_wax_color", hex);
+      setValue("admin-wax-hex-input", hex.toUpperCase());
     });
   }
 }
@@ -729,6 +751,9 @@ function saveAllAdminData(e) {
 
   const boxColor = getVal("admin-box-color-picker") || getVal("admin-box-hex-input");
   if (boxColor) localStorage.setItem("birthday_custom_box_color", boxColor);
+
+  const waxColor = getVal("admin-wax-color-picker") || getVal("admin-wax-hex-input");
+  if (waxColor) localStorage.setItem("birthday_custom_wax_color", waxColor);
 
   alert("🎉 ĐÃ LƯU THÀNH CÔNG!\nToàn bộ thay đổi đã được lưu lại. Đang mở trang Thiệp Mời...");
   window.open("index.html", "_blank");

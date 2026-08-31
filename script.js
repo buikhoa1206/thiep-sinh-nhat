@@ -322,6 +322,20 @@ function applyCustomColorVars(colorHex) {
     const envelope3d = document.getElementById("envelope-3d");
     if (envelope3d) envelope3d.style.backgroundColor = customBoxColor;
   }
+
+  // Custom 3D Wax Seal Color
+  const customWaxColor = localStorage.getItem("birthday_custom_wax_color");
+  if (customWaxColor) {
+    const lighterWax = adjustColorBrightness(customWaxColor, 35);
+    const darkerWax = adjustColorBrightness(customWaxColor, -40);
+    const waxGradient = `radial-gradient(circle, ${lighterWax} 0%, ${customWaxColor} 70%, ${darkerWax} 100%)`;
+
+    if (targetBody) targetBody.style.setProperty('--wax-seal-bg', waxGradient, 'important');
+    if (targetRoot) targetRoot.style.setProperty('--wax-seal-bg', waxGradient, 'important');
+
+    const royalBow = document.getElementById("royal-bow");
+    if (royalBow) royalBow.style.background = waxGradient;
+  }
 }
 
 function adjustColorBrightness(hex, percent) {

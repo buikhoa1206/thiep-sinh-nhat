@@ -250,12 +250,12 @@
           </div>
         </div>
 
-        <!-- TÙY CHỈNH MÀU PHÔNG NỀN BÌA MÀN HÌNH PHONG BÌ & THÂN PHONG BÌ 3D -->
+        <!-- TÙY CHỈNH MÀU PHÔNG NỀN BÌA MÀN HÌNH PHONG BÌ, THÂN PHONG BÌ 3D & CON DẤU SÁP -->
         <div class="pt-4 border-t border-rose-100 space-y-4 text-xs sm:text-sm">
           <h4 class="font-bold text-gray-800 flex items-center gap-2">
-            <i class="fas fa-palette text-rose-500"></i> Tùy Chỉnh Chi Tiết Bộ 3 Màu Thiệp (Nhập Mã Hex Hoặc Chọn Bánh Xe Màu):
+            <i class="fas fa-palette text-rose-500"></i> Tùy Chỉnh Chi Tiết Bộ 4 Màu Thiệp (Nhập Mã Hex Hoặc Chọn Bánh Xe Màu):
           </h4>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- 1. Màu Chủ Đạo Thiệp -->
             <div class="p-4 bg-rose-50/50 rounded-2xl border border-rose-200 space-y-2">
               <div class="flex items-center justify-between">
@@ -292,6 +292,19 @@
               <div class="flex items-center bg-white rounded-xl border border-rose-300 px-3 py-1.5 shadow-inner">
                 <span class="text-xs font-mono font-bold text-gray-400 mr-1">HEX</span>
                 <input type="text" id="admin-box-hex-input" oninput="adminUpdateBoxHex(this.value)" placeholder="#9F1239" class="w-full bg-transparent text-xs font-mono font-bold text-gray-900 focus:outline-none uppercase">
+              </div>
+            </div>
+
+            <!-- 4. Màu Con Dấu Sáp Hoàng Gia 3D -->
+            <div class="p-4 bg-amber-50/70 rounded-2xl border border-amber-300 space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="block font-bold text-amber-950 text-xs">👑 Màu Con Dấu Sáp 3D:</label>
+                <input type="color" id="admin-wax-color-picker" value="#d97706" class="w-8 h-8 rounded-lg cursor-pointer border border-amber-400 shrink-0">
+              </div>
+              <p class="text-[10px] text-amber-800">Màu Con Dấu Sáp dập phong bì</p>
+              <div class="flex items-center bg-white rounded-xl border border-amber-400 px-3 py-1.5 shadow-inner">
+                <span class="text-xs font-mono font-bold text-amber-600 mr-1">HEX</span>
+                <input type="text" id="admin-wax-hex-input" oninput="adminUpdateWaxHex(this.value)" placeholder="#D97706" class="w-full bg-transparent text-xs font-mono font-bold text-amber-950 focus:outline-none uppercase">
               </div>
             </div>
           </div>
