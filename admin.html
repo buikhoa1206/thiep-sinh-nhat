@@ -621,11 +621,16 @@
     <div class="space-y-6">
       <!-- Bảng RSVP -->
       <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-rose-100 space-y-4">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h2 class="text-lg font-bold font-cinzel text-gray-900 flex items-center gap-2">
             <i class="fas fa-clipboard-list text-rose-500"></i> Danh Sách Khách Xác Nhận Tham Dự (RSVP)
           </h2>
-          <button onclick="clearRSVPs()" class="text-xs text-red-500 hover:underline">Xóa lịch sử RSVP</button>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="exportRSVPToExcel()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer">
+              <i class="fas fa-file-excel"></i> 📊 Xuất File Excel RSVP
+            </button>
+            <button type="button" onclick="clearRSVPs()" class="text-xs text-red-500 hover:underline">Xóa lịch sử RSVP</button>
+          </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -649,11 +654,16 @@
 
       <!-- Sổ Lưu Bút Full Log -->
       <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-rose-100 space-y-4">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h2 class="text-lg font-bold font-cinzel text-gray-900 flex items-center gap-2">
             <i class="fas fa-comment-dots text-rose-500"></i> Danh Sách Toàn Bộ Lời Chúc Mừng (Lưu trữ 100% tại Admin)
           </h2>
-          <button onclick="clearWishes()" class="text-xs text-red-500 hover:underline font-semibold">Xóa tất cả lời chúc</button>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="exportWishesToExcel()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer">
+              <i class="fas fa-file-excel"></i> 📊 Xuất File Excel Lời Chúc
+            </button>
+            <button type="button" onclick="clearWishes()" class="text-xs text-red-500 hover:underline font-semibold">Xóa tất cả lời chúc</button>
+          </div>
         </div>
 
         <div id="admin-wishes-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-1">

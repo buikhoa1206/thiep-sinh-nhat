@@ -853,6 +853,71 @@ function clearWishes() {
   renderAdminWishesList();
 }
 
+// --- EXPORT TO EXCEL / CSV ENGINE ---
+function exportRSVPToExcel() {
+  const rsvps = JSON.parse(localStorage.getItem("birthday_rsvps") || "[]");
+
+  if (!rsvps.length) {
+    return alert("Chưa có dữ liệu khách gửi phản hồi RSVP để xuất file Excel!");
+  }
+
+  // Define CSV Header with UTF-8 BOM for Microsoft Excel Vietnamese font compatibility
+  let csvContent = "\uFEFF";
+  csvContent += "Họ và Tên,Số Điện Thoại,Trạng Thái Tham Dự,Số Người Đi Cùng,Ghi Chú / Phản Hồi,Thời Gian Gửi\n";
+
+  rsvps.forEach(r => {
+    const name = cleanCsvValue(r.name);
+    const phone = cleanCsvValue(r.phone || "-");
+    const status = cleanCsvValue(r.status || "");
+    const guests = cleanCsvValue(r.guests || "1");
+    const note = cleanCsvValue(r.note || "-");
+    const date = cleanCsvValue(r.date || "-");
+
+    csvContent += `"${name}","${phone}","${status}","${guests}","${note}","${date}"\n`;
+  });
+
+  downloadCsvFile(csvContent, "Danh_Sach_Khach_Moi_RSVP_Sinh_Nhat.csv");
+}
+
+function exportWishesToExcel() {
+  const userWishes = JSON.parse(localStorage.getItem("birthday_wishes") || "[]");
+  const sampleWishes = CONFIG.sampleWishes || [];
+  const allWishes = [...userWishes, ...sampleWishes];
+
+  if (!allWishes.length) {
+    return alert("Chưa có dữ liệu lời chúc từ khách mời để xuất file Excel!");
+  }
+
+  let csvContent = "\uFEFF";
+  csvContent += "Người Gửi Lời Chúc,Nội Dung Lời Chúc,Thời Gian\n";
+
+  allWishes.forEach(w => {
+    const name = cleanCsvValue(w.name);
+    const message = cleanCsvValue(w.message);
+    const time = cleanCsvValue(w.time || "Gần đây");
+
+    csvContent += `"${name}","${message}","${time}"\n`;
+  });
+
+  downloadCsvFile(csvContent, "Danh_Sach_Loi_Chuc_Sinh_Nhat.csv");
+}
+
+function cleanCsvValue(val) {
+  if (!val) return "";
+  return String(val).replace(/"/g, '""');
+}
+
+function downloadCsvFile(content, fileName) {
+  const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", fileName);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 function escapeHtml(str) {
   return str.replace(/[&<>'"]/g, 
     tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
